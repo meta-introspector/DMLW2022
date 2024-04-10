@@ -1,0 +1,191 @@
+<!DOCTYPE html><html>
+<head>
+<title></title>
+<style type="text/css">
+<!--
+.xflip {
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: fliph;
+}
+.yflip {
+    -moz-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: flipv;
+}
+.xyflip {
+    -moz-transform: scaleX(-1) scaleY(-1);
+    -webkit-transform: scaleX(-1) scaleY(-1);
+    -o-transform: scaleX(-1) scaleY(-1);
+    transform: scaleX(-1) scaleY(-1);
+    filter: fliph + flipv;
+}
+-->
+</style>
+</head>
+<body>
+<a name=1></a>Modulus:&#160;An&#160;Open&#160;Modular&#160;Design&#160;for&#160;Interoperable<br/>
+and&#160;Reusable&#160;Machine&#160;Learning<br/>
+Salvatore&#160;Vivona1,2&#160;and&#160;Luca&#160;Vivona1<br/>
+1commune.ai<br/>
+2Algovera.ai<br/>
+Abstract<br/>
+Modulus&#160;provides&#160;an&#160;open&#160;framework&#160;for&#160;developers&#160;to&#160;create&#160;modular,&#160;inter-<br/>operable&#160;modules.&#160;These&#160;modules&#160;are&#160;designed&#160;to&#160;be&#160;modular&#160;(surprise?),&#160;reusable<br/>and&#160;inter-operable&#160;locally&#160;and&#160;remotely&#160;via&#160;peer&#160;to&#160;peer&#160;communication&#160;protocols.<br/>Modules&#160;are&#160;lightweight&#160;and&#160;general&#160;enough&#160;to&#160;wrap&#160;over&#160;any&#160;machine&#160;learning&#160;tool.<br/>Developers&#160;can&#160;also&#160;organize&#160;modules&#160;into&#160;a&#160;module&#160;file&#160;system,&#160;representing&#160;their<br/>own&#160;module&#160;hub.&#160;Developers&#160;can&#160;also&#160;expose&#160;their&#160;modules&#160;as&#160;public&#160;endpoints<br/>through&#160;their&#160;local&#160;peer,&#160;and&#160;can&#160;restrict&#160;access&#160;based&#160;on&#160;their&#160;accounts&#160;signature.<br/>Modulus&#160;is&#160;by&#160;design&#160;open&#160;source&#160;and&#160;does&#160;not&#160;rely&#160;on&#160;any&#160;tokenomics,&#160;allowing<br/>developers&#160;to&#160;monetize&#160;their&#160;public&#160;endpoints&#160;through&#160;any&#160;tokenized&#160;asset&#160;including<br/>their&#160;own.<br/>
+1<br/>
+Introduction<br/>
+Sharing&#160;is&#160;caring,&#160;especially&#160;in&#160;machine&#160;learning.&#160;However,&#160;many&#160;of&#160;the&#160;models&#160;and&#160;pipelines&#160;are&#160;not<br/>very&#160;reusable,&#160;requiring&#160;additional&#160;tedious&#160;effort&#160;towards&#160;interoperability.&#160;This&#160;lack&#160;of&#160;interoperability<br/>allowed&#160;for&#160;platforms&#160;fill&#160;this&#160;void&#160;(ZenML,&#160;Lightning,&#160;Fast.ai,&#160;Huggingface).&#160;These&#160;companies<br/>attempt&#160;to&#160;connect&#160;different&#160;tools&#160;into&#160;one&#160;cohesive&#160;tool-set,&#160;striving&#160;to&#160;be&#160;the&#160;one&#160;platform&#160;to&#160;rule<br/>them&#160;all.&#160;Despite&#160;many&#160;platforms&#160;proclaiming&#160;their&#160;support&#160;for&#160;open&#160;ML,&#160;many&#160;do&#160;not&#160;fully&#160;open<br/>source&#160;their&#160;code-base,&#160;and&#160;some&#160;monetize&#160;their&#160;community’s&#160;intellectual&#160;property&#160;to&#160;cooperate<br/>clients&#160;.&#160;Platforms&#160;can&#160;also&#160;lock-in&#160;developers,&#160;as&#160;they&#160;build&#160;tools&#160;that&#160;are&#160;fully&#160;compatible&#160;with&#160;their<br/>ecosystem&#160;and&#160;not&#160;competitors.&#160;Paradoxically,&#160;these&#160;platforms&#160;create&#160;walled&#160;gardens&#160;that&#160;section<br/>developers&#160;from&#160;effectively&#160;collaborating.&#160;Modulus&#160;attempts&#160;replace&#160;walled&#160;gardens&#160;with&#160;a&#160;wall-less<br/>garden;&#160;a&#160;fully&#160;open&#160;source&#160;protocol&#160;for&#160;developers&#160;to&#160;create,&#160;connect&#160;and&#160;share&#160;machine&#160;learning<br/>modules&#160;.&#160;Modulus&#160;provides&#160;modules&#160;templates,&#160;allowing&#160;tools&#160;to&#160;be&#160;reusable,&#160;inter-operable,&#160;and<br/>connectable&#160;via&#160;local&#160;or&#160;remote&#160;messaging&#160;protocols&#160;(&#160;TCP,&#160;UDP,&#160;gRPC&#160;).&#160;Developers&#160;are&#160;provided<br/>
+with&#160;their&#160;own&#160;module&#160;hub,&#160;where&#160;they&#160;can&#160;organize&#160;share&#160;and&#160;monetize&#160;modules.<br/>
+2<br/>
+Methods<br/>
+Modulus&#160;is&#160;strongly&#160;opinionated&#160;in&#160;being&#160;un-opinionated.&#160;The&#160;design&#160;attempts&#160;to&#160;serve&#160;as&#160;an&#160;inter<br/>operable&#160;layer&#160;that&#160;allows&#160;users&#160;to&#160;easily&#160;wrap&#160;over&#160;any&#160;machine&#160;learning&#160;or&#160;processing&#160;with&#160;its<br/>module&#160;block.<br/>
+2.1<br/>
+Module&#160;Block<br/>
+A&#160;module&#160;block&#160;is&#160;a&#160;process&#160;that&#160;allows&#160;for&#160;multiple&#160;inputs&#160;and&#160;outputs.&#160;It&#160;can&#160;receive&#160;inputs<br/>
+and&#160;write&#160;outputs&#160;via&#160;its&#160;set&#160;of&#160;clients&#160;which&#160;connect&#160;to&#160;various&#160;servers/processes&#160;outside&#160;of&#160;the<br/>module.&#160;These&#160;servers&#160;involve&#160;local/remote&#160;databases&#160;(Redis,&#160;MongoDB,&#160;Postgres),&#160;API&#160;endpoints<br/>
+33rd&#160;Conference&#160;on&#160;Neural&#160;Information&#160;Processing&#160;Systems&#160;(NeurIPS&#160;2019),&#160;Vancouver,&#160;Canada.<br/>
+<hr/>
+<a name=2></a><img src="7-2_1.png"/><br/>
+<img src="7-2_2.png"/><br/>
+(GraphQL/REST),&#160;peer&#160;to&#160;peer&#160;connections&#160;<a href="7s.html#6">(gRPC[6],&#160;IPFS[1]&#160;</a>,&#160;Arweav<a href="7s.html#6">e[14])&#160;</a>and&#160;customised<br/>
+connections.&#160;A&#160;typical&#160;module&#160;run-time&#160;involves&#160;three&#160;steps:&#160;1.&#160;read&#160;preliminary&#160;data&#160;from&#160;a&#160;clients<br/>
+(loading&#160;a&#160;dataset,&#160;model)&#160;2.&#160;run&#160;some&#160;custom&#160;logic&#160;over&#160;the&#160;read&#160;data&#160;into&#160;output&#160;data&#160;3.&#160;write<br/>
+output&#160;data&#160;to&#160;clients.&#160;If&#160;the&#160;read,&#160;run,&#160;write&#160;flow&#160;is&#160;too&#160;limiting,&#160;users&#160;can&#160;build&#160;their&#160;own&#160;custom<br/>methods&#160;as&#160;they&#160;would&#160;with&#160;a&#160;normal&#160;class&#160;.<br/>
+Figure&#160;1:&#160;Illustration&#160;of&#160;a&#160;module’s&#160;forward&#160;pass<br/>
+3<br/>
+Module&#160;File-system<br/>
+Each&#160;module&#160;is&#160;represented&#160;as&#160;a&#160;folder.&#160;The&#160;folder&#160;contains&#160;the&#160;main&#160;python&#160;script&#160;(module.py)&#160;and&#160;its<br/>configuration&#160;file&#160;(module.yaml).&#160;This&#160;structure&#160;allows&#160;modules&#160;to&#160;be&#160;inter-operable&#160;with&#160;practically<br/>any&#160;asset&#160;that&#160;can&#160;be&#160;represented&#160;as&#160;these&#160;two&#160;files.&#160;For&#160;instance,&#160;you&#160;can&#160;wrap&#160;a&#160;Huggingface<br/>model/Dataset&#160;with&#160;a&#160;module,&#160;and&#160;feed&#160;it&#160;with&#160;tweets&#160;from&#160;a&#160;model&#160;wrapped&#160;over&#160;a&#160;Twitter&#160;API.<br/>
+The&#160;module&#160;folder&#160;can&#160;also&#160;have&#160;additional&#160;files&#160;and&#160;dependencies.&#160;This&#160;can&#160;include&#160;other&#160;modules<br/>(folders),&#160;Python&#160;files,&#160;Dockerfiles,&#160;pip/conda&#160;environment&#160;files,&#160;Helm&#160;charts,&#160;.&#160;These&#160;files&#160;help<br/>
+ensure&#160;that&#160;the&#160;module&#160;is&#160;portable&#160;wherein&#160;its&#160;run-time&#160;can&#160;be&#160;compatible&#160;with&#160;multiple&#160;machines.<br/>
+Figure&#160;2:&#160;module&#160;tree&#160;containing&#160;a&#160;file-system&#160;of&#160;modules.<br/>
+Module&#160;folders&#160;can&#160;be&#160;constructed&#160;into&#160;a&#160;single&#160;file&#160;system&#160;representing&#160;an&#160;ontology/tree&#160;of&#160;modules.<br/>
+The&#160;tree&#160;helps&#160;developers&#160;organize&#160;modules&#160;based&#160;on&#160;their&#160;purpose&#160;and&#160;classification&#160;(model,&#160;dataset,<br/>
+process)&#160;.The&#160;module&#160;tree&#160;can&#160;also&#160;be&#160;synonymous&#160;to&#160;a&#160;mono-repo,&#160;and&#160;is&#160;intended&#160;to&#160;contain&#160;modules<br/>
+2<br/>
+<hr/>
+<a name=3></a><img src="7-3_1.png"/><br/>
+serving&#160;across&#160;multiple&#160;projects.&#160;This&#160;encourages&#160;developers&#160;to&#160;have&#160;their&#160;own&#160;personal&#160;module&#160;tree<br/>mono-repo,&#160;where&#160;they&#160;can&#160;easily&#160;reuse&#160;and&#160;share&#160;modules&#160;for&#160;new&#160;projects.<br/>
+3.1<br/>
+Module&#160;Manager&#160;API<br/>
+The&#160;module&#160;manager&#160;allows&#160;developers&#160;to&#160;manage&#160;running&#160;modules&#160;and&#160;submit&#160;tasks&#160;to&#160;these<br/>
+modules.&#160;The&#160;module&#160;manager&#160;is&#160;also&#160;responsible&#160;for&#160;monitoring&#160;and&#160;managing&#160;the&#160;modules’<br/>resource&#160;consumption.&#160;At&#160;the&#160;moment,&#160;the&#160;total&#160;module&#160;consumption&#160;is&#160;tracked&#160;in&#160;terms&#160;of&#160;disk<br/>used,&#160;number&#160;of&#160;CPUs,&#160;main&#160;memory&#160;and&#160;GPU&#160;memory.&#160;When&#160;a&#160;new&#160;module&#160;needs&#160;to&#160;replace&#160;an<br/>existing&#160;module,&#160;the&#160;outgoing&#160;module&#160;marked&#160;with&#160;the&#160;lowest&#160;priority&#160;score.&#160;This&#160;priority&#160;score&#160;is<br/>defined&#160;by&#160;the&#160;user,&#160;and&#160;defaults&#160;to&#160;first&#160;in&#160;first&#160;out&#160;(FIFO)&#160;.&#160;Launched&#160;modules&#160;are&#160;also&#160;provided&#160;with<br/>public/private&#160;key&#160;pairs.&#160;These&#160;module&#160;keys&#160;are&#160;used&#160;for&#160;assigning&#160;each&#160;module&#160;an&#160;identity&#160;that&#160;is<br/>verified&#160;with&#160;their&#160;private&#160;key&#160;signature.&#160;Modulus&#160;also&#160;uses&#160;multi-format&#160;schemes&#160;to&#160;accommodate<br/>the&#160;verification&#160;and&#160;identity&#160;that&#160;is&#160;agnostic&#160;to&#160;the&#160;key&#160;type&#160;(ie,&#160;ECDSA&#160;<a href="7s.html#6">[11],&#160;AES[2]).&#160;</a>This&#160;allows<br/>for&#160;modules&#160;to&#160;have&#160;identities&#160;as&#160;account&#160;on&#160;multiple&#160;block-chains,&#160;having&#160;a&#160;key&#160;pair&#160;for&#160;each&#160;chain.<br/>
+This&#160;identity&#160;layer&#160;can&#160;also&#160;limit&#160;external&#160;peers&#160;from&#160;accessing&#160;publicly&#160;exposed&#160;modules.<br/>
+3.2<br/>
+Launching&#160;a&#160;Module<br/>
+A&#160;module&#160;can&#160;be&#160;initialized&#160;by&#160;knowing&#160;its&#160;module&#160;path.&#160;If&#160;no&#160;configuration&#160;is&#160;specified,&#160;the&#160;module’s<br/>
+default&#160;YAML&#160;file&#160;is&#160;used&#160;(module.yaml).&#160;Users&#160;can&#160;also&#160;override&#160;the&#160;default&#160;configuration&#160;with&#160;an<br/>override&#160;dictionary&#160;mapping&#160;the&#160;configuration&#160;key&#160;path&#160;(‘dataset.batchsize’=12)&#160;with&#160;the&#160;replacing<br/>value.&#160;Modules&#160;can&#160;be&#160;initialized&#160;as&#160;ray&#160;actors&#160;<a href="7s.html#6">[9].&#160;</a>Ray&#160;actors&#160;are&#160;class&#160;objects&#160;that&#160;can&#160;be&#160;deployed<br/>as&#160;daemon&#160;processes&#160;over&#160;a&#160;a&#160;local&#160;or&#160;Kubernetes&#160;cluster.&#160;When&#160;deployed,&#160;each&#160;module&#160;actor&#160;is<br/>given&#160;a&#160;name&#160;based&#160;on&#160;its&#160;module&#160;path.&#160;If&#160;more&#160;than&#160;one&#160;of&#160;the&#160;same&#160;module&#160;is&#160;deployed&#160;(ie.&#160;a<br/>pool&#160;of&#160;actors),&#160;a&#160;tag&#160;is&#160;used&#160;to&#160;avoid&#160;name&#160;conflicts&#160;(model.transformer-1&#160;and&#160;model.transformer-2).<br/>
+These&#160;processes&#160;live&#160;until&#160;they&#160;are&#160;killed&#160;(ray.kill)&#160;allowing&#160;for&#160;developers&#160;to&#160;reuse&#160;already&#160;deployed<br/>
+modules&#160;as&#160;remote&#160;processes.<br/>
+3.3<br/>
+Calling&#160;a&#160;Module<br/>
+Jobs&#160;are&#160;submitted&#160;through&#160;a&#160;REST&#160;API&#160;giving&#160;access&#160;to&#160;the&#160;module&#160;manager.&#160;The&#160;user&#160;can&#160;input&#160;a<br/>JSON&#160;serialized&#160;python&#160;dictionary&#160;involving&#160;3&#160;key&#160;components:&#160;1.&#160;The&#160;module’s&#160;path&#160;(string),&#160;2.<br/>the&#160;function&#160;attribute&#160;(string)&#160;,&#160;and&#160;3.&#160;The&#160;functions&#160;inputs&#160;(list/args&#160;or&#160;dictionary/kwargs).&#160;If<br/>the&#160;module&#160;is&#160;not&#160;running&#160;in&#160;a&#160;ray&#160;cluster,&#160;a&#160;new&#160;module&#160;will&#160;be&#160;spawned.<br/>
+Figure&#160;3:&#160;Illustration&#160;of&#160;API&#160;call.<br/>
+3.4<br/>
+Connecting&#160;Modules<br/>
+Connecting&#160;modules&#160;occurs&#160;locally&#160;or&#160;over&#160;the&#160;wire&#160;with&#160;modules&#160;located&#160;on&#160;an&#160;external&#160;peer.<br/>Messaging&#160;between&#160;peers&#160;occur&#160;through&#160;the&#160;queue&#160;server.<br/>
+3.5<br/>
+Queue&#160;Server<br/>
+The&#160;queue&#160;server&#160;is&#160;a&#160;special&#160;module&#160;that&#160;is&#160;responsible&#160;for&#160;managing&#160;a&#160;dictionary&#160;of&#160;Asyncio&#160;queues<br/>
+<a href="7s.html#6">[7].&#160;</a>This&#160;allows&#160;for&#160;modules&#160;to&#160;access&#160;each&#160;other&#160;through&#160;putting&#160;and&#160;getting&#160;objects&#160;from&#160;a&#160;global<br/>
+3<br/>
+<hr/>
+<a name=4></a><img src="7-4_1.png"/><br/>
+<img src="7-4_2.png"/><br/>
+queue.&#160;By&#160;default,&#160;each&#160;module&#160;has&#160;an&#160;input&#160;and&#160;output&#160;queue,&#160;where&#160;the&#160;queue’s&#160;key&#160;is&#160;defined<br/>by&#160;its&#160;module&#160;path,&#160;suffixed&#160;by&#160;the&#160;queue&#160;direction.&#160;For&#160;instance,&#160;module&#160;&#34;model.transformer&#34;<br/>
+would&#160;have&#160;an&#160;input&#160;and&#160;output&#160;queue&#160;under&#160;&#34;model.transformer.in&#34;and&#160;&#34;model.transformer.out&#34;.<br/>This&#160;is&#160;not&#160;strict&#160;and&#160;modules&#160;can&#160;create&#160;their&#160;own&#160;custom&#160;names&#160;for&#160;queues&#160;for&#160;specific&#160;use&#160;cases.<br/>
+However,&#160;allowing&#160;for&#160;a&#160;default&#160;naming&#160;of&#160;queues&#160;makes&#160;it&#160;simple&#160;for&#160;developers&#160;to&#160;chain&#160;modules<br/>knowing&#160;their&#160;names.<br/>
+Figure&#160;4:&#160;Illustration&#160;of&#160;a&#160;Queue&#160;Server<br/>
+4<br/>
+Module&#160;Pipeline<br/>
+Queue&#160;servers&#160;connect&#160;modules&#160;through&#160;sending&#160;and&#160;receiving&#160;objects&#160;in&#160;their&#160;key&#160;registered&#160;queue.<br/>
+An&#160;example&#160;of&#160;this&#160;can&#160;be&#160;one&#160;or&#160;many&#160;dataset&#160;modules&#160;sending&#160;training&#160;batches&#160;to&#160;a&#160;queue&#160;for<br/>
+a&#160;model&#160;module&#160;to&#160;asynchronously&#160;receive&#160;and&#160;train&#160;on.&#160;Another&#160;example&#160;could&#160;be&#160;having&#160;an<br/>aggregator&#160;model&#160;receive&#160;the&#160;predictions&#160;of&#160;many&#160;models&#160;for&#160;assembling.&#160;Allowing&#160;for&#160;modules&#160;to<br/>synchronize&#160;on&#160;queue’s&#160;makes&#160;it&#160;simple&#160;for&#160;modules&#160;to&#160;inter&#160;operate&#160;in&#160;many&#160;complex&#160;forms.<br/>
+Figure&#160;5:&#160;Illustration&#160;of&#160;a&#160;general&#160;pipeline&#160;of&#160;interconnecting&#160;modules.<br/>
+4.1<br/>
+Connecting&#160;Modules&#160;over&#160;the&#160;Wire<br/>
+The&#160;modulus&#160;API&#160;allows&#160;for&#160;external&#160;users&#160;to&#160;run&#160;module&#160;actors&#160;locally&#160;over&#160;JSON&#160;gRPC&#160;<a href="7s.html#6">[6]&#160;</a>.&#160;This<br/>
+involves&#160;user&#160;A&#160;sending&#160;a&#160;request&#160;to&#160;user&#160;B’s&#160;machine,&#160;which&#160;is&#160;placed&#160;in&#160;a&#160;request&#160;queue&#160;before&#160;it&#160;is<br/>processed&#160;by&#160;the&#160;module.&#160;Some&#160;connections&#160;may&#160;require&#160;authentication&#160;signatures&#160;from&#160;requesting<br/>peers.&#160;This&#160;allows&#160;for&#160;the&#160;server&#160;to&#160;limit&#160;access&#160;to&#160;accounts&#160;they&#160;trust.&#160;Upon&#160;verification,&#160;the&#160;module<br/>returns&#160;a&#160;response&#160;containing&#160;a&#160;JSON&#160;serialize&#160;response.<br/>
+4.2<br/>
+Module&#160;Access&#160;Control<br/>
+Module&#160;access&#160;control&#160;allows&#160;developers&#160;to&#160;expose&#160;their&#160;module&#160;API&#160;to&#160;trusted&#160;accounts.&#160;These<br/>accounts&#160;can&#160;be&#160;collaborators,&#160;friends,&#160;family&#160;and&#160;patrons&#160;who&#160;pay&#160;for&#160;access.&#160;Verification&#160;is&#160;done<br/>through&#160;having&#160;the&#160;client&#160;peer&#160;sign&#160;a&#160;string&#160;containing&#160;a&#160;UTC&#160;timestamp&#160;and&#160;its&#160;public&#160;key&#160;address,<br/>
+with&#160;the&#160;key&#160;type.&#160;This&#160;multi&#160;format&#160;is&#160;used&#160;to&#160;accommodate&#160;for&#160;multiple&#160;key&#160;types&#160;for&#160;the&#160;purpose<br/>
+of&#160;agnosticism&#160;<a href="7s.html#6">[5].&#160;</a>if&#160;the&#160;message&#160;was&#160;signed&#160;by&#160;a&#160;trusted&#160;peer&#160;,&#160;the&#160;server&#160;should&#160;be&#160;able&#160;to&#160;proceed<br/>the&#160;API&#160;call&#160;knowing&#160;its&#160;a&#160;trustful&#160;client.&#160;This&#160;form&#160;of&#160;control&#160;allows&#160;developers&#160;to&#160;monetize&#160;their<br/>endpoints&#160;to&#160;patrons.&#160;Developers&#160;can&#160;create&#160;custom&#160;payment&#160;schema&#160;that&#160;fit&#160;their&#160;use-case,&#160;and<br/>can&#160;charge&#160;in&#160;whatever&#160;token&#160;they&#160;desire.&#160;This&#160;avoids&#160;developers&#160;from&#160;being&#160;locked&#160;in&#160;to&#160;any<br/>
+4<br/>
+<hr/>
+<a name=5></a><img src="7-5_1.png"/><br/>
+<img src="7-5_2.png"/><br/>
+specific&#160;tokenomic&#160;structure,&#160;giving&#160;full&#160;financial&#160;autonomy.&#160;One&#160;consideration&#160;is&#160;that&#160;peers&#160;may&#160;not<br/>authenticate&#160;frequently&#160;to&#160;avoid&#160;network&#160;costs.&#160;Each&#160;pair&#160;of&#160;peers&#160;can&#160;decide&#160;their&#160;own&#160;verification<br/>depending&#160;on&#160;their&#160;needs.&#160;This&#160;can&#160;be&#160;involve&#160;some&#160;situations&#160;that&#160;require&#160;more&#160;security&#160;to&#160;have<br/>more&#160;frequent&#160;verification,&#160;with&#160;the&#160;frequency&#160;of&#160;verification’s&#160;drop&#160;proportionally&#160;to&#160;the&#160;level&#160;of<br/>trust&#160;between&#160;two&#160;peers.<br/>
+Figure&#160;6:&#160;Authentication&#160;process&#160;in&#160;a&#160;server&#160;module&#160;verifying&#160;a&#160;client&#160;module.<br/>
+4.3<br/>
+Smart&#160;Contracts<br/>
+Modulus&#160;uses&#160;python&#160;libraries&#160;that&#160;interface&#160;with&#160;different&#160;block-chains.&#160;These&#160;include&#160;web3(EVM)<br/><a href="7s.html#6">[4],&#160;</a>substrate&#160;(Polkadot)&#160;<a href="7s.html#6">[10],&#160;</a>CosmosSDK&#160;<a href="7s.html#6">[3],&#160;</a>and&#160;solona-py&#160;(Solona)&#160;<a href="7s.html#6">[12].&#160;</a>These&#160;smart&#160;contract<br/>interfaces&#160;can&#160;be&#160;wrapped&#160;by&#160;a&#160;module,&#160;allowing&#160;for&#160;smart&#160;contracts&#160;to&#160;interact&#160;with&#160;other&#160;non-smart<br/>contract&#160;modules&#160;.&#160;For&#160;example,&#160;one&#160;module&#160;can&#160;predict&#160;the&#160;price&#160;of&#160;Ethereum,&#160;send&#160;its&#160;prediction&#160;to<br/>a&#160;module&#160;infer-facing&#160;with&#160;a&#160;smart&#160;contract&#160;to&#160;trigger&#160;to&#160;swap&#160;Ethereum&#160;for&#160;USDC&#160;on&#160;Sushiswap’s<br/>decentralized&#160;exchange.&#160;Modules&#160;can&#160;also&#160;connect&#160;different&#160;smart&#160;contracts&#160;across&#160;different&#160;chains,<br/>allowing&#160;for&#160;customize&#160;cross&#160;chain&#160;synchronization&#160;for&#160;python&#160;developers.&#160;We&#160;refer&#160;to&#160;such&#160;a&#160;process<br/>as&#160;smart&#160;contract&#160;portals,&#160;as&#160;it&#160;involves&#160;building&#160;a&#160;portal&#160;synchronizing&#160;two&#160;smart&#160;contracts.&#160;This&#160;can<br/>be&#160;synchronized&#160;using&#160;one&#160;module,&#160;or&#160;many&#160;modules&#160;across&#160;different&#160;peers.&#160;Each&#160;synchronization<br/>may&#160;require&#160;multi-signature&#160;aggregation&#160;before&#160;triggering&#160;a&#160;synchronization&#160;state&#160;change&#160;<a href="7s.html#6">[8].&#160;</a>In&#160;the<br/>limit,&#160;the&#160;entire&#160;state&#160;of&#160;the&#160;smart&#160;contracts&#160;can&#160;be&#160;mirrored&#160;across&#160;multiple&#160;chains.<br/>
+Figure&#160;7:&#160;Smart&#160;contract&#160;interfacing&#160;modules<br/>
+5<br/>
+<hr/>
+<a name=6></a>4.4<br/>
+Storing&#160;Modules<br/>
+Recall&#160;each&#160;module&#160;is&#160;self-contained&#160;inside&#160;a&#160;folder,&#160;containing&#160;all&#160;of&#160;the&#160;necessary&#160;information<br/>for&#160;portability&#160;across&#160;peers.&#160;The&#160;folder&#160;can&#160;be&#160;made&#160;publicly&#160;accessible&#160;through&#160;IPFS,&#160;Arweave,<br/>Ceramic,&#160;and&#160;Filecoin.&#160;Private&#160;assets&#160;can&#160;be&#160;encrypted&#160;by&#160;a&#160;private&#160;key&#160;that&#160;is&#160;ideally&#160;only&#160;distributed<br/>to&#160;provisioned&#160;users&#160;who&#160;can&#160;decrypt&#160;the&#160;files.&#160;This&#160;ability&#160;to&#160;limit&#160;accessibility&#160;allows&#160;users&#160;to<br/>monetize&#160;their&#160;modules&#160;as&#160;intellectual&#160;property.&#160;This&#160;can&#160;include&#160;selling&#160;assets,&#160;period&#160;subscription<br/>access&#160;,&#160;token&#160;per&#160;call,&#160;or&#160;profit&#160;sharing&#160;<a href="7s.html#6">[13]&#160;</a>.&#160;In&#160;the&#160;subscription&#160;access&#160;example,&#160;this&#160;involves&#160;the<br/>provider&#160;revealing&#160;a&#160;private&#160;key&#160;for&#160;registered&#160;users,&#160;but&#160;expires&#160;under&#160;specific&#160;conditions&#160;(ie&#160;after<br/>30&#160;days).&#160;Because&#160;the&#160;modules&#160;are&#160;token&#160;agnostic,&#160;developers&#160;can&#160;choose&#160;their&#160;preferred&#160;tokens&#160;of<br/>payment,&#160;whether&#160;its&#160;their&#160;a&#160;stable&#160;coin,&#160;Ethereum,&#160;or&#160;their&#160;own&#160;token.<br/>
+5<br/>
+Conclusion<br/>
+Modulus&#160;is&#160;a&#160;framework&#160;that&#160;strives&#160;towards&#160;ensuring&#160;users&#160;can&#160;easily&#160;inter-operate&#160;and&#160;monetize<br/>their&#160;assets.&#160;The&#160;framework&#160;is&#160;intended&#160;to&#160;provide&#160;full&#160;autonomy&#160;and&#160;intellectual&#160;property&#160;over<br/>developer&#160;assets.&#160;This&#160;design&#160;avoids&#160;developers&#160;from&#160;succumbing&#160;to&#160;platform&#160;lock-ins,&#160;breaking<br/>through&#160;the&#160;walled&#160;gardens.<br/>
+References<br/>
+[1]&#160;Juan&#160;Benet.&#160;Ipfs-content&#160;addressed,&#160;versioned,&#160;p2p&#160;file&#160;system.&#160;arXiv&#160;preprint&#160;arXiv:1407.3561,<br/>
+2014.<br/>
+[2]&#160;Andrey&#160;Bogdanov,&#160;Dmitry&#160;Khovratovich,&#160;and&#160;Christian&#160;Rechberger.&#160;Biclique&#160;cryptanalysis<br/>
+of&#160;the&#160;full&#160;aes.&#160;In&#160;International&#160;conference&#160;on&#160;the&#160;theory&#160;and&#160;application&#160;of&#160;cryptology&#160;and<br/>information&#160;security,&#160;pages&#160;344–371.&#160;Springer,&#160;2011.<br/>
+[3]&#160;cosmos.&#160;Cosmos-sdk.<br/>
+[4]&#160;Ethereum.&#160;Ethereum/web3.py:&#160;A&#160;python&#160;interface&#160;for&#160;interacting&#160;with&#160;the&#160;ethereum&#160;blockchain<br/>
+and&#160;ecosystem.<br/>
+[5]&#160;Bryan&#160;Ford,&#160;Pyda&#160;Srisuresh,&#160;and&#160;Dan&#160;Kegel.&#160;Peer-to-peer&#160;communication&#160;across&#160;network<br/>
+address&#160;translators.&#160;In&#160;USENIX&#160;Annual&#160;Technical&#160;Conference,&#160;General&#160;Track,&#160;pages&#160;179–192,<br/>2005.<br/>
+[6]&#160;Grpc.&#160;Releases&#160;·&#160;grpc/grpc.<br/>
+[7]&#160;John&#160;Hunt.&#160;Concurrency&#160;with&#160;asyncio.&#160;In&#160;Advanced&#160;Guide&#160;to&#160;Python&#160;3&#160;Programming,&#160;pages<br/>
+407–417.&#160;Springer,&#160;2019.<br/>
+[8]&#160;Meenakshi&#160;Kansal,&#160;Amit&#160;Kumar&#160;Singh,&#160;and&#160;Ratna&#160;Dutta.&#160;Efficient&#160;multi-signature&#160;scheme<br/>
+using&#160;lattice.&#160;The&#160;Computer&#160;Journal,&#160;65(9):2421–2429,&#160;2022.<br/>
+[9]&#160;Philipp&#160;Moritz,&#160;Robert&#160;Nishihara,&#160;Stephanie&#160;Wang,&#160;Alexey&#160;Tumanov,&#160;Richard&#160;Liaw,&#160;Eric&#160;Liang,<br/>
+Melih&#160;Elibol,&#160;Zongheng&#160;Yang,&#160;William&#160;Paul,&#160;Michael&#160;I&#160;Jordan,&#160;et&#160;al.&#160;Ray:&#160;A&#160;distributed<br/>framework&#160;for&#160;emerging&#160;{AI}&#160;applications.&#160;In&#160;13th&#160;USENIX&#160;Symposium&#160;on&#160;Operating&#160;Systems<br/>
+Design&#160;and&#160;Implementation&#160;(OSDI&#160;18),&#160;pages&#160;561–577,&#160;2018.<br/>
+[10]&#160;parity.&#160;py-substrate.<br/>
+[11]&#160;GVS&#160;Raju&#160;and&#160;Rehan&#160;Akbani.&#160;Elliptic&#160;curve&#160;cryptosystem&#160;and&#160;its&#160;applications.&#160;In&#160;SMC’03<br/>
+Conference&#160;Proceedings.&#160;2003&#160;IEEE&#160;International&#160;Conference&#160;on&#160;Systems,&#160;Man&#160;and&#160;Cybernetics.<br/>Conference&#160;Theme-System&#160;Security&#160;and&#160;Assurance&#160;(Cat.&#160;No.&#160;03CH37483),&#160;volume&#160;2,&#160;pages<br/>
+1540–1543.&#160;IEEE,&#160;2003.<br/>
+[12]&#160;solona.&#160;Solona&#160;python.<br/>
+[13]&#160;Salvatore&#160;Vivona.&#160;Communal&#160;treasuries.<br/>
+[14]&#160;Sam&#160;Williams,&#160;Viktor&#160;Diordiiev,&#160;Lev&#160;Berman,&#160;and&#160;Ivan&#160;Uemlianin.&#160;Arweave:&#160;A&#160;protocol<br/>
+for&#160;economically&#160;sustainable&#160;information&#160;permanence.&#160;Arweave&#160;Yellow&#160;Paper,&#160;www.&#160;arweave.<br/>org/yellow-paper.&#160;pdf,&#160;2019.<br/>
+6<br/>
+<hr/>
+<a name="outline"></a><h1>Document Outline</h1>
+<ul>
+<li><a href="7s.html#1">Introduction</a></li>
+<li><a href="7s.html#1">Methods</a>
+<ul>
+<li><a href="7s.html#1">Module Block</a></li>
+</ul>
+</li>
+<li><a href="7s.html#2">Module File-system</a>
+<ul>
+<li><a href="7s.html#3">Module Manager API</a></li>
+<li><a href="7s.html#3">Launching a Module</a></li>
+<li><a href="7s.html#3">Calling a Module</a></li>
+<li><a href="7s.html#3">Connecting Modules</a></li>
+<li><a href="7s.html#3">Queue Server</a></li>
+</ul>
+</li>
+<li><a href="7s.html#4">Module Pipeline</a>
+<ul>
+<li><a href="7s.html#4">Connecting Modules over the Wire&#160;</a></li>
+<li><a href="7s.html#4">Module Access Control&#160;</a></li>
+<li><a href="7s.html#5">Smart Contracts</a></li>
+<li><a href="7s.html#6">Storing Modules&#160;</a></li>
+</ul>
+</li>
+<li><a href="7s.html#6">Conclusion&#160;</a></li>
+</ul>
+<hr/>
+</body>
+</html>
